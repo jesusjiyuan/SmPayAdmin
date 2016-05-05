@@ -1,0 +1,120 @@
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+		 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+<typeAlias alias="vipCouponBo" type="com.zero2ipo.water.coupon.bo.VipCoupon"/>
+<resultMap class="vipCouponBo" id="vipCouponMap">
+	<result property="id" column="id"/>
+	<result property="rMobile" column="r_mobile"/>
+	<result property="sMobile" column="s_mobile"/>
+	<result property="couponCode" column="coupon_code"/>
+	<result property="createTime" column="create_time"/>
+	<result property="couponName" column="coupon_name"/>
+	<result property="couponMoney" column="coupon_money"/>
+	<result property="couponStartTime" column="coupon_start_time"/>
+	<result property="couponEndTime" column="coupon_end_time"/>
+	<result property="couponRemark" column="coupon_remark"/>
+	<result property="status" column="status"/>
+</resultMap>
+
+<select id='findVipCouponList' resultMap='vipCouponMap'>
+SELECT
+	id,
+	r_mobile,
+	s_mobile,
+	coupon_code,
+	create_time,
+	coupon_name,
+	coupon_money,
+	coupon_start_time,
+	coupon_end_time,
+	coupon_remark,
+	status
+FROM water_vip_coupon
+<dynamic prepend="WHERE">
+<isNotEmpty prepend="AND" property="rMobile">
+r_mobile=#rMobile#
+</isNotEmpty>
+	<isNotEmpty prepend="AND" property="sMobile">
+s_mobile=#sMobile#
+</isNotEmpty>
+</dynamic>
+	order by create_time DESC
+</select>
+
+<select id='findVipCouponListCount' resultClass='java.lang.Integer'>
+SELECT
+	count(0)
+FROM water_vip_coupon
+<dynamic prepend="WHERE">
+	<isNotEmpty prepend="AND" property="rMobile">
+		r_mobile=#rMobile#
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="sMobile">
+		s_mobile=#sMobile#
+	</isNotEmpty>
+</dynamic>
+</select>
+
+<select id='findVipCouponById' resultMap='vipCouponMap'>
+SELECT
+	id,
+	r_mobile,
+	s_mobile,
+	coupon_code,
+	create_time,
+	coupon_name,
+	coupon_money,
+	coupon_start_time,
+	coupon_end_time,
+	coupon_remark,
+	status
+FROM water_vip_coupon
+where id=#id#
+</select>
+
+<insert id="addVipCoupon" parameterClass="vipCouponBo">
+	INSERT INTO water_vip_coupon(
+	r_mobile,
+	s_mobile,
+	coupon_code,
+	create_time,
+	coupon_name,
+	coupon_money,
+	coupon_start_time,
+	coupon_end_time,
+	coupon_remark
+)VALUES(
+	#rMobile#,
+	#sMobile#,
+	#couponCode#,
+	now(),
+	#couponName#,
+	#couponMoney#,
+	#couponStartTime#,
+	#couponEndTime#,
+	#couponRemark#
+)
+</insert>
+<update id="updVipCoupon" parameterClass="vipCouponBo">
+	UPDATE
+	water_vip_coupon
+	SET
+	r_mobile=#rMobile#,
+	s_mobile=#sMobile#,
+	coupon_code=#couponCode#,
+	coupon_name=#couponName#,
+	coupon_money=#couponMoney#,
+	coupon_start_time=#couponStartTime#,
+	coupon_end_time=#couponEndTime#,
+	coupon_remark=#couponRemark#
+	status=#status#
+ 	WHERE
+	ID=#id#
+</update>
+<delete id="deleleteVipCoupon" parameterClass="vipCouponBo">
+	DELETE FROM
+		water_vip_coupon
+	WHERE
+	id=#id#
+</delete>
+</sqlMap>

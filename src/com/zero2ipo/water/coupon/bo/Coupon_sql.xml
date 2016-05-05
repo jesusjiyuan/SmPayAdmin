@@ -1,0 +1,118 @@
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+		 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+<typeAlias alias="coupon" type="com.zero2ipo.water.coupon.bo.Coupon"/>
+<resultMap class="coupon" id="CouponMap">
+	<result property="id" column="id"/>
+	<result property="name" column="name"/>
+	<result property="money" column="money"/>
+	<result property="remark" column="remark"/>
+	<result property="status" column="status"/>
+	<result property="startTime" column="start_time"/>
+	<result property="endTime" column="end_time"/>
+	<result property="code" column="code"/>
+	<result property="flag" column="flag"/>
+	<result property="min" column="min"/>
+</resultMap>
+
+<select id='findCouponList' resultMap='CouponMap'>
+SELECT
+	id,
+	name,
+	money,
+	remark,
+	status,
+	start_time,
+	end_time,
+	code,
+	flag,
+	min
+
+FROM water_coupon
+<dynamic prepend="WHERE">
+	<isNotEmpty prepend="AND" property="flag">
+		flag=#flag#
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="endTime">
+		end_time >=#endTime#
+	</isNotEmpty>
+</dynamic>
+</select>
+<select id='findCoupon' resultMap='CouponMap'>
+SELECT
+	id,
+	name,
+	money,
+	remark,
+	status,
+	start_time,
+	end_time,
+	code,
+	flag,
+	min
+FROM water_coupon
+WHERE
+id=#id#
+</select>
+<select id='findCouponListCount' resultClass='java.lang.Integer'>
+SELECT
+	count(0)
+FROM water_coupon
+<dynamic prepend="WHERE">
+	<isNotEmpty prepend="AND" property="flag">
+		flag=#flag#
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="endTime">
+		end_time >= #endTime#
+	</isNotEmpty>
+</dynamic>
+</select>
+<insert id="insertCoupon" parameterClass="coupon">
+	INSERT INTO water_coupon(
+	id,
+	name,
+	money,
+	remark,
+	start_time,
+	end_time,
+	code,
+	flag,
+	min
+)VALUES(
+	#id#,
+	#name#,
+	#money#,
+	#remark#,
+	#startTime#,
+	#endTime#,
+	#code#,
+	#flag#,
+	#min#
+)
+</insert>
+<update id="updateCoupon" parameterClass="coupon">
+	UPDATE
+		water_coupon
+	SET
+	name=#name#,
+	money=#money#,
+	remark=#remark#,
+	status=#status#,
+	start_time=#startTime#,
+	end_time=#endTime#,
+	code=#code#	,
+	flag=#flag#,
+	min=#min#
+ 	WHERE
+	ID=#id#
+</update>
+<delete id="deleteCouponByIds" parameterClass="java.util.Map">
+	DELETE FROM
+	water_coupon
+	WHERE
+	ID IN
+	<iterate property="id" conjunction="," close=")" open="(">
+	#id[]#
+	</iterate>
+</delete>
+</sqlMap>

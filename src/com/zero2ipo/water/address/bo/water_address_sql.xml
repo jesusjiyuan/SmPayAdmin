@@ -1,0 +1,180 @@
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+		 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="mobile.Address">
+	<typeAlias alias="AddressBo" type="com.zero2ipo.water.address.bo.AddressBo"/>
+	<resultMap class="AddressBo" id="AddressMap">
+		<result property="id" column="id"/>
+		<result property="address" column="address"/>
+		<result property="detailAddress" column="detailAddress"/>
+		<result property="consignee" column="consignee"/>
+		<result property="mobile" column="mobile"/>
+		<result property="tel" column="tel"/>
+		<result property="email" column="email"/>
+		<result property="best_time" column="best_time"/>
+		<result property="empNo" column="empNo"/>
+		<result property="province" column="province"/>
+		<result property="city" column="city"/>
+		<result property="district" column="district"/>
+		<result property="userId" column="userId"/>
+
+	</resultMap>
+	<!--查询-->
+
+	<select id='findAddressList' resultMap='AddressMap'>
+		SELECT
+			id,
+			address,
+			detailAddress,
+		    consignee,
+			mobile,
+		    tel,
+			email,
+			best_time,
+			empNo,
+			province,
+			city,
+			district,
+			userId
+		FROM cfj_Address
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="userId">
+				userId=#userId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="mobile">
+				mobile=#mobile#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="tel">
+				tel=#tel#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="email">
+				email=#email#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id='findAddressById' resultClass='AddressBo'>
+		SELECT
+			id,
+			address,
+			detailAddress,
+		    consignee,
+			mobile,
+		    tel,
+			email,
+			best_time,
+			empNo,
+			province,
+			city,
+			district,
+			userId
+		FROM
+			cfj_Address
+		WHERE
+			id=#id#
+	</select>
+	<select id='findAddressListCount' resultClass='java.lang.Integer'>
+		SELECT
+			count(0)
+		FROM cfj_Address
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="userId">
+				userId=#userId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="mobile">
+				mobile=#mobile#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="tel">
+				tel=#tel#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="email">
+				email=#email#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	<!--新增-->
+	<insert id="addAddress" parameterClass="AddressBo">
+		INSERT INTO cfj_Address(
+			address,
+			detailAddress,
+		    consignee,
+			mobile,
+		    tel,
+			email,
+			best_time,
+			empNo,
+			province,
+			city,
+			district,
+			userId
+		)VALUES(
+			#address#,
+			#detailAddress#,
+		    #consignee#,
+			#mobile#,
+		    #tel#,
+			#email#,
+			#best_time#,
+			#empNo#,
+			#province#,
+			#city#,
+			#district#,
+			#userId#
+		)
+		<selectKey resultClass="long" keyProperty="id" >
+			SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	<!--修改-->
+	<update id="updAddress" parameterClass="AddressBo">
+		UPDATE
+		cfj_Address
+		<dynamic prepend="SET">
+			<isNotEmpty prepend="," property="address">
+				address=#address#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="detailAddress">
+				detailAddress=#detailAddress#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="consignee">
+				consignee=#consignee#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="mobile">
+				mobile=#mobile#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="tel">
+				tel=#tel#
+			</isNotEmpty>
+
+			<isNotEmpty prepend="," property="email">
+				email=#email#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="best_time">
+				best_time=#best_time#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="empNo">
+				empNo=#empNo#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="province">
+				province=#province#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="city">
+				city=#city#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="district">
+				district=#district#
+			</isNotEmpty>
+		</dynamic>
+		WHERE
+		id=#id#
+	</update>
+	<!--删除-->
+	<delete id="delAddress" parameterClass="java.util.Map">
+		DELETE FROM
+		cfj_Address
+		WHERE
+		id IN
+		<iterate property="id" conjunction="," close=")" open="(">
+			#id[]#
+		</iterate>
+	</delete>
+</sqlMap>
